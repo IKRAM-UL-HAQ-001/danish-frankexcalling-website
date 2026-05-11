@@ -23,10 +23,17 @@ class SecurityHeadersMiddleware
         // Prevent MIME type sniffing
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         
-        // Basic Content Security Policy
+        // Content Security Policy
         // Note: 'unsafe-inline' and 'unsafe-eval' are included because the app 
-        // appears to use inline scripts/styles in Blade templates.
-        $response->headers->set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com;");
+        // uses inline scripts/styles and CryptoJS/jQuery in Blade templates.
+        $csp = "default-src 'self'; " .
+               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://demos.creative-tim.com; " .
+               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.datatables.net https://demos.creative-tim.com; " .
+               "img-src 'self' data: https://demos.creative-tim.com; " .
+               "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com https://demos.creative-tim.com; " .
+               "connect-src 'self';";
+               
+        $response->headers->set('Content-Security-Policy', $csp);
 
         return $response;
     }
