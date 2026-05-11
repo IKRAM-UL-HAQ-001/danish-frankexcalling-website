@@ -1,0 +1,73 @@
+# Laravel
+/public/hot
+/public/storage
+/storage/*.key
+/storage/app/public
+/storage/debugbar
+/bootstrap/cache/*.php
+
+# Environment files
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+
+# Vendor
+/vendor
+
+# Node modules
+/node_modules
+
+# NPM / Yarn
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# IDEs
+/.idea
+/.vscode
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+/storage/logs/*
+*.log
+
+# Cache
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+
+# PHPUnit
+coverage/
+
+# Mix / Vite
+/public/build
+/public/mix-manifest.json
+
+# Sail
+/docker-compose.override.yml
+
+# Ignore compiled assets
+/public/js
+/public/css
+
+# Database
+/database/*.sqlite
+
+# Backup files
+*.bak
+*.sql
+*.gz
+*.zip
+
+# Composer
+composer.phar
+
+# Laravel Pint
+.pint.cache
+
+# Pest
+.pest.cache

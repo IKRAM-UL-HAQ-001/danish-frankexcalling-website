@@ -1,0 +1,246 @@
+@extends("layouts.main")
+@section('content')
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-11 mb-xl-0 mx-auto my-5 border w-full bg-white rounded d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center p-3 border-bottom mb-5">
+                <h2 class="mb-0">Exchange Customer Care List</h2>
+                <div>
+                </div>
+            </div>
+            <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center col-12">
+                <div class="card-body px-0 pb-2 px-3 col-12">
+                    @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+                    <div class="table-responsive p-0">
+                        <table id="DataTable" class="table align-items-center mb-0 table-striped table-hover px-2">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary font-weight-bolder text-dark ps-2">User Name</th>
+                                    <th class="text-uppercase text-secondary font-weight-bolder text-dark ps-2">User Email</th>
+                                    <th class="text-uppercase text-secondary font-weight-bolder text-dark">Date and Time</th>
+                                    <th class="text-center text-uppercase text-secondary font-weight-bolder text-dark">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="DataTableBody">
+                                @foreach ($CustomerCares as $CustomerCare)
+                                <tr>
+                                    <td style="width: 25%;" class="encrypted-data">{{ $CustomerCare->name }}</td>
+                                    <td style="width: 25%;" class="encrypted-data">{{ $CustomerCare->email }}</td>
+                                    <td>{{ $CustomerCare->created_at }}</td>
+                                    <td style="width:%; text-align: center;" class="d-flex flex-row">
+                                        <button class="btn btn-danger btn-sm mx-2" data-bs-toggle="modal" data-bs-target="#dashboardModal" onclick="loadDashboard({{ $CustomerCare->id }},{{ $CustomerCare->exchange_id }})" style="background:#acc301;">Dashboard</button>
+                                        <form method="POST" action="{{route('admin.customer_care.delete')}}">
+                                            @csrf 
+                                            <input type="hidden" id="deleteIdInput" name="id" value="{{$CustomerCare->id}}">
+                                            <button type="submit" class="btn btn-danger btn-sm mx-2">Delete</button>
+                                        </form>
+                                        <button type="button" class="btn btn-info btn-sm text-white bg-dark mx-2 edit-button"
+                                            data-id="{{ $CustomerCare->id }}"
+                                            data-name="{{ $CustomerCare->name }}">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dashboardModal" tabindex="-1" aria-labelledby="dashboardModalLabel" aria-hidden="true" style="z-index:;">
+    <div class="modal-dialog" style="max-width: 90%; z-index:;">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <h5 class="modal-title" id="dashboardModalLabel" style="color:white">Customer Care dashboard</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit Customer Care Modal -->
+<div class="modal fade" id="editCustomerCareModal" tabindex="-1" aria-labelledby="editCustomerCareModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="editCustomerCareModalLabel">Edit Customer Care</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editCustomerCareForm" method="post" action="{{ route('admin.customer_care.update') }}">
+                    @csrf
+                    <input type="hidden" id="customerCareId" name="id">
+                    <div class="mb-3">
+                        <label for="editUserName" class="form-label">User Name</label>
+                        <input type="text" class="form-control" id="editUserName" name="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="editPassword" name="password">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    $(document).ready(function() {
+        const editButtons = document.querySelectorAll('.edit-button');
+    const editModal = new bootstrap.Modal(document.getElementById('editCustomerCareModal'));
+
+    // Handle click event for Edit buttons
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Get the Customer Care ID and name
+            const customerCareId = button.getAttribute('data-id');
+            const userName = decryptData(button.getAttribute('data-name'));
+
+            // Set values in the modal
+            document.getElementById('customerCareId').value = customerCareId;
+            document.getElementById('editUserName').value = userName;
+            document.getElementById('editPassword').value = '';
+
+            // Show the modal
+            editModal.show();
+        });
+    });
+
+    // Handle form submission with encryption
+    $('#editCustomerCareForm').on('submit', async function(e) {
+        e.preventDefault();
+
+        try {
+            // Encrypt the username and password fields
+            const customerCareId = $('#customerCareId').val();
+            const encryptedUserName = encryptData($('#editUserName').val());
+            const encryptedPassword = encryptData($('#editPassword').val());
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: {
+                    id: customerCareId,
+                    name: encryptedUserName,
+                    password: encryptedPassword,
+                    _token: $('input[name="_token"]').val() // Include CSRF token
+                },
+               success: function(response) {
+                    location.reload(); // Reload the page after a successful update
+                },
+                error: function(error) {
+                }
+            });
+        } catch (error) {
+        }
+    });
+        
+    });
+
+    // Function to load the dashboard with ID
+    function loadDashboard(id, exchangeId) {
+    let formData = new FormData();
+    formData.append('id', id);
+    formData.append('exchange_id', exchangeId);
+
+    $.ajax({
+        url: "{{ route('admin.customer_care.popUpDashboard') }}",
+        type: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+
+            // Check if dailyData and monthlyData exist in the response
+            if (response.dailyData && response.monthlyData) {
+                let dailyMetricsHtml = '<h3 class="text-uppercase text-center mt-2 mb-2" style=" font-weight:bold">Daily Metrics</h3><div class="row">';
+                response.dailyData.forEach(function(item) {
+                    dailyMetricsHtml += `
+                        <div class="col-xl-3 col-sm-6 mb-xl-0 my-4">
+                            <div class="card">
+                                <div class="card-body p-3" style="background:#acc301;border-radius:10px; font-weight:bold;">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-uppercase font-weight-bold text-white">${item.label}</p>
+                                                <h5 class="font-weight-bolder text-white">${item.value}</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape text-primary shadow-primary text-center rounded-circle" style="background-color: white;">
+                                                <i class="${item.icon} text-lg opacity-10" style="color:#5e72e4;" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                dailyMetricsHtml += '</div>';
+
+                let monthlyMetricsHtml = '<h3 class="text-uppercase text-center mt-5 mb-2" style="font-weight:bold">Monthly Metrics</h3><div class="row">';
+                response.monthlyData.forEach(function(item) {
+                    monthlyMetricsHtml += `
+                        <div class="col-xl-3 col-sm-6 mb-xl-0 my-4">
+                            <div class="card">
+                                <div class="card-body p-3" style="background:#acc301 !important;border-radius:10px; font-weight:bold;">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-uppercase font-weight-bold text-white">${item.label}</p>
+                                                <h5 class="font-weight-bolder text-white">${item.value}</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape shadow-primary text-center rounded-circle" style="background-color: white;">
+                                                <i class="${item.icon} text-primary text-lg opacity-10" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                monthlyMetricsHtml += '</div>';
+
+                // Insert generated HTML into the modal body
+                $('#dashboardModal .modal-body').html(dailyMetricsHtml + monthlyMetricsHtml);
+            } else {
+                $('#dashboardModal .modal-body').html('<p>No data available</p>');
+            }
+
+            // Show the modal
+            $('#dashboardModal').modal('show');
+        },
+        error: function(xhr, status, error) {
+        }
+    });
+}
+
+</script>
+
+@endsection
