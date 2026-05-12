@@ -43,19 +43,21 @@ Route::get('/', [LoginController::class, 'index'])->name('auth.login');
 Route::post('/post', [LoginController::class, 'login'])->name('login.post');
 Route::get('/auth/logout', [LoginController::class, 'logout'])->name('login.logout');
 
-//Excel
-Route::post('/export-complaint', [ComplaintController::class, 'exportComplaint'])->name('export.complaint');
-Route::get('/export-quaterly-report', [QuaterlyReportController::class, 'exportQuaterlyReport'])->name('export.quaterly');    
-Route::post('/export-demoSend', [DemoSendController::class, 'exportDemoSend'])->name('export.demoSend');
-Route::post('/export-followUp', [FollowUpController::class, 'exportFollowUp'])->name('export.followUp');    
-Route::post('/export-newId', [NewIdController::class, 'exportNewId'])->name('export.newId');    
-Route::post('/export-ReferId', [ReferIdController::class, 'exportReferId'])->name('export.referId');
-Route::post('/export-Reject', [RejectController::class, 'exportReject'])->name('export.reject');
-Route::post('/export-Walk', [WalkController::class, 'exportWalk'])->name('export.walk');
-Route::post('/export-Rejoin', [RejoinController::class, 'exportRejoin'])->name('export.rejoin');
-Route::post('/export-active-phoneNumbers', [PhoneNumberController::class, 'exportActivePhoneNumbers'])->name('export.activePhoneNumbers');
+Route::group(['middleware' => ['anyrole']], function () {
+    //Excel
+    Route::post('/export-complaint', [ComplaintController::class, 'exportComplaint'])->name('export.complaint');
+    Route::get('/export-quaterly-report', [QuaterlyReportController::class, 'exportQuaterlyReport'])->name('export.quaterly');
+    Route::post('/export-demoSend', [DemoSendController::class, 'exportDemoSend'])->name('export.demoSend');
+    Route::post('/export-followUp', [FollowUpController::class, 'exportFollowUp'])->name('export.followUp');
+    Route::post('/export-newId', [NewIdController::class, 'exportNewId'])->name('export.newId');
+    Route::post('/export-ReferId', [ReferIdController::class, 'exportReferId'])->name('export.referId');
+    Route::post('/export-Reject', [RejectController::class, 'exportReject'])->name('export.reject');
+    Route::post('/export-Walk', [WalkController::class, 'exportWalk'])->name('export.walk');
+    Route::post('/export-Rejoin', [RejoinController::class, 'exportRejoin'])->name('export.rejoin');
+    Route::post('/export-active-phoneNumbers', [PhoneNumberController::class, 'exportActivePhoneNumbers'])->name('export.activePhoneNumbers');
 
-Route::post('/users', [UserController::class, 'getUsers'])->name('getusers');
+    Route::post('/users', [UserController::class, 'getUsers'])->name('getusers');
+});
 Route::group(['middleware' => ['admin']], function () {
 
     Route::get('/admin/search/DataEntry', [SearchController::class, 'index'])->name('admin.search.list');

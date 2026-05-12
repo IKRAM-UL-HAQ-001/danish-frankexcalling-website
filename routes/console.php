@@ -37,7 +37,6 @@ Schedule::call(function () {
     
     foreach ($emails as $email) {
         $rawOtp = (string) random_int(100000, 999999);
-        $hashedOtp = Hash::make($rawOtp);
         $expiration = Carbon::now()->addHours(2);
         
         if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -46,12 +45,11 @@ Schedule::call(function () {
         }
 
         Otp::create([
-            'otp' => $hashedOtp,
+            'otp' => $rawOtp,
             'otp_exp' => $expiration,
         ]);
 
         try {
-            // Note: We send the RAW OTP to the user, but store the HASHED version
             Mail::to($email)->send(new OtpMail($rawOtp));
             Log::info("OTP email sent successfully to {$email}");
         } catch (\Exception $e) {

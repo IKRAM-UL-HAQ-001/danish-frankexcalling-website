@@ -13,6 +13,7 @@ class Kernel extends HttpKernel
         'customercare' => \App\Http\Middleware\CustomerCareMiddleware::class,
         'assistant' => \App\Http\Middleware\AssistantMiddleware::class,
         'exchange' => \App\Http\Middleware\ExchangeUserMiddleware::class,
+        'anyrole' => \App\Http\Middleware\AnyRoleMiddleware::class,
     ];
     /**
      * The application's global HTTP middleware stack.

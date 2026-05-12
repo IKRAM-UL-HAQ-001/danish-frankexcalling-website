@@ -74,16 +74,6 @@ class NewIdExport implements FromQuery, WithHeadings, WithStyles, WithColumnWidt
 
     public function map($record): array
     {
-        Log::info('Mapping Record:', [
-            'id' => $record->id,
-            'exchange_name' => $record->exchange_name,
-            'user_name' => $record->user_name,
-            'name' => $record->name,
-            'phone' => $record->phone->phone_number,
-            'feedback' => $record->feedback,
-            'amount' => $record->amount,
-        ]);
-
         return [
             $record->id,
             $this->decryptData($record->exchange_name),

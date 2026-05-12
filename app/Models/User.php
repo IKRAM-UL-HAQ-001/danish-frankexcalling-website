@@ -18,6 +18,16 @@ class User extends Authenticatable
      */
     protected $fillable = ['name', 'password', 'exchange_id'];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     public function exchange()
     {
         return $this->belongsTo(Exchange::class);
