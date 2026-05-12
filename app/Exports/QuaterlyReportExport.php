@@ -32,7 +32,7 @@ class QuaterlyReportExport implements FromQuery, WithHeadings, WithStyles, WithC
             'users.name as user_name',
             'exchanges.name as exchange_name',
             \DB::raw('COUNT(data_entries.id) as TotalNewIdCount'),
-            \DB::raw("SUM(CAST(AES_DECRYPT(FROM_BASE64(data_entries.amount), '$key') AS DECIMAL(10, 2))) as TotalAmountFourMonths")
+            \DB::raw("SUM(CAST(data_entries.amount AS DECIMAL(10, 2))) as TotalAmountFourMonths")
             )
             ->join('exchanges', 'users.exchange_id', '=', 'exchanges.id')
             ->leftJoin('data_entries', function ($join) use ($fourMonthsAgo) {
@@ -49,28 +49,7 @@ class QuaterlyReportExport implements FromQuery, WithHeadings, WithStyles, WithC
     }
     private function decryptData($encryptedData)
     {
-        $key = config('app.aes_encrypt_key');
-        $iv = hex2bin('00000000000000000000000000000000');
-
-        if (empty($encryptedData)) {
-            return $encryptedData;
-        }
-
-        try {
-            $decodedData = base64_decode($encryptedData, true);
-            if ($decodedData === false) {
-                return $encryptedData;
-            }
-
-            $decryptedData = openssl_decrypt($decodedData, 'AES-128-CBC', $key, OPENSSL_RAW_DATA, $iv);
-            if ($decryptedData === false) {
-                return $encryptedData;
-            }
-
-            return $decryptedData;
-        } catch (\Exception $e) {
-            return $encryptedData;
-        }
+        return $encryptedData;
     }
 
     public function map($record): array

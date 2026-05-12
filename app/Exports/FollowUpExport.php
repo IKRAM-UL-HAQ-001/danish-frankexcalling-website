@@ -79,30 +79,7 @@ class FollowUpExport implements FromQuery, WithHeadings, WithStyles, WithColumnW
 
     private function decryptData($encryptedData)
     {
-        \Log::info('DecryptData Method Called', ['encryptedData' => $encryptedData]);
-
-        $key = 'MRikam@#@2024!XY';
-        $iv = hex2bin('00000000000000000000000000000000');
-
-        if (empty($encryptedData)) {
-            return $encryptedData;
-        }
-
-        try {
-            $decodedData = base64_decode($encryptedData, true);
-            if ($decodedData === false) {
-                return $encryptedData;
-            }
-
-            $decryptedData = openssl_decrypt($decodedData, 'AES-128-CBC', $key, OPENSSL_RAW_DATA, $iv);
-            if ($decryptedData === false) {
-                return $encryptedData;
-            }
-
-            return $decryptedData;
-        } catch (\Exception $e) {
-            return $encryptedData;
-        }
+        return $encryptedData;
     }
 
     public function headings(): array

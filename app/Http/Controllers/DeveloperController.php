@@ -19,23 +19,7 @@ class DeveloperController extends Controller
     }
     function decryptData($encryptedData)
     {
-        $secretKey = 'MRikam@#@2024!XY'; // Example Key
-        $iv = hex2bin('00000000000000000000000000000000'); // Example IV
-
-        try {
-            // Use OpenSSL for decryption
-            $decrypted = openssl_decrypt(
-                base64_decode($encryptedData),
-                'AES-256-CBC',
-                $secretKey,
-                0,
-                $iv
-            );
-
-            return $decrypted ?: null;
-        } catch (\Exception $e) {
-            return null;
-        }
+        return $encryptedData;
     }
 
     public function getPhoneNumbers(Request $request)

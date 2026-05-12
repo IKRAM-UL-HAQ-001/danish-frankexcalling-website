@@ -29,14 +29,7 @@ class QuaterlyReportController extends Controller
 
     function decryptData($encryptedData) 
     {
-        $key = 'MRikam@#@2024!XY'; 
-        $iv = hex2bin('00000000000000000000000000000000'); 
-    
-        $encryptedData = base64_decode($encryptedData);
-    
-        $decryptedData = openssl_decrypt($encryptedData, 'AES-128-CBC', $key, OPENSSL_RAW_DATA, $iv);
-    
-        return $decryptedData; 
+        return $encryptedData; 
     }
 
     public function index()

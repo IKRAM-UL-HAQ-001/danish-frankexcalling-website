@@ -9,6 +9,11 @@
                             <li class="breadcrumb-item text-sm">
                                 <a class="text-white mb-2" href="javascript:void(0);">Admin</a>
                             </li>
+                            @if(session('exchange'))
+                            <li class="breadcrumb-item text-sm">
+                                <a class="text-white mb-2" href="javascript:void(0);">{{ session('exchange') }}</a>
+                            </li>
+                            @endif
                             <li class="breadcrumb-item text-sm text-white active" aria-current="page">Dashboard</li>
                         @break
 

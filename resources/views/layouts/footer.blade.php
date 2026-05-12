@@ -45,56 +45,16 @@
         const iv = CryptoJS.enc.Hex.parse('00000000000000000000000000000000'); // 16-byte fixed IV
 
         function encryptData(data) {
-            if (!data || typeof data !== 'string') {
-                console.warn('Invalid data for encryption. Returning empty string.');
-                return ''; // Avoid encrypting invalid data
-            }
-
-            try {
-                return CryptoJS.AES.encrypt(data, secretKey, {
-                    iv: iv
-                }).toString();
-            } catch (e) {
-                console.error('Error during encryption:', e.message);
-                return '';
-            }
+            return data;
         }
 
         function decryptData(encryptedData) {
-            if (!encryptedData || encryptedData.length === 0) {
-                console.warn('No data to decrypt. Returning empty string.');
-                return ''; // Return empty if no valid data is found
-            }
-
-            try {
-                // Attempt decryption
-                const decrypted = CryptoJS.AES.decrypt(encryptedData, secretKey, {
-                    iv: iv
-                });
-                const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
-
-                if (!plaintext) {
-                    throw new Error('Decryption returned empty plaintext. Malformed encrypted data.');
-                }
-
-                return plaintext;
-            } catch (e) {
-                console.error('Error during decryption:', e.message);
-                return ''; // Return empty string if decryption fails
-            }
+            return encryptedData;
         }
 
 
         $(document).ready(function() {
-            $('.encrypted-data').each(function() {
-                const encryptedData = $(this).text().trim();
-
-                // Decrypt only if the data is valid
-                const decryptedData = decryptData(encryptedData);
-                if (decryptedData) {
-                    $(this).text(decryptedData);
-                }
-            });
+            // Decryption loop removed
         });
     </script>
 </footer>

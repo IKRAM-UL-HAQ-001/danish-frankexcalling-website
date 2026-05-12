@@ -13,12 +13,12 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->updateOrInsert(
             ['id' => 1],
             [
-                'name' => 'vQapttK1zNq3BELO6MiasA==',
-                'email' => 'NsRoqbf7mFkWqpt3PNALmsrJM7Uxa1cbOEu17Ro7caI=',
-                'password' => Hash::make('acR9EaNKAAh8PdK0uSAgaA=='),
+                'name' => 'admin',
+                'email' => 'admin@example.com',
+                'password' => Hash::make('admin'),
                 'role' => 'admin',
                 'status' => 'active',
-                'exchange_id' => null,
+                'exchange_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

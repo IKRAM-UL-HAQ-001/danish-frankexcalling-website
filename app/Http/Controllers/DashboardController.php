@@ -22,16 +22,9 @@ use App\Models\DataEntry;
 use Carbon\Carbon;
 use Auth;
 use DB;
-use App\Services\EncryptionService;
 
 class DashboardController extends Controller
 {
-    protected $encryptionService;
-
-    public function __construct(EncryptionService $encryptionService)
-    {
-        $this->encryptionService = $encryptionService;
-    }
 
 
     public function index()

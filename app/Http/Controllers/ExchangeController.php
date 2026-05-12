@@ -9,16 +9,9 @@ use App\Models\PhoneNumber;
 use App\Models\Exchange;
 use App\Models\DataEntry;
 use Carbon\Carbon;
-use App\Services\EncryptionService;
 
 class ExchangeController extends Controller
 {
-    protected $encryptionService;
-
-    public function __construct(EncryptionService $encryptionService)
-    {
-        $this->encryptionService = $encryptionService;
-    }
 
     /**
      * Display a listing of the resource.

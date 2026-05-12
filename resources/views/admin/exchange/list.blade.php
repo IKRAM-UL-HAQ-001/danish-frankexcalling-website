@@ -22,7 +22,7 @@
                             <tbody id="DataTableBody">
                                 @foreach ($Exchanges as $exchange)
                                 <tr data-exchange-id="{{ $exchange->id }}">
-                                    <td style="width:50%;" class="text-dark encrypted-data">{{ $exchange->name }}</td>
+                                    <td style="width:50%;" class="text-dark">{{ $exchange->name}}</td>
                                     <td style=";" class="d-flex flex-row">
                                         <form action="{{ route('admin.exchange.userlist') }}" method="POST" style="display:inline;">
                                             @csrf
@@ -116,7 +116,7 @@ $(document).ready(function() {
         button.addEventListener('click', function() {
             // Retrieve the exchange ID and name
             const exchangeId = button.getAttribute('data-id');
-            const exchangeName = decryptData(button.getAttribute('data-name'));
+            const exchangeName = button.getAttribute('data-name'); // decryptData(button.getAttribute('data-name'));
 
             // Set values in the modal inputs
             document.getElementById('exchangeId').value = exchangeId;
@@ -132,10 +132,10 @@ $(document).ready(function() {
         try {
             // Encrypt the exchange name
             const exchangeId = $('#exchangeId').val();
-            const exchangeName = encryptData($('#editExchangeName').val());
+            // const exchangeName = encryptData($('#editExchangeName').val());
 
             // Set encrypted value back to the form field
-            $('#editExchangeName').val(exchangeName);
+            // $('#editExchangeName').val(exchangeName);
 
             // Submit the form
             this.submit();
@@ -150,7 +150,7 @@ $(document).ready(function() {
     $('#form').on('submit', function(e) {
         e.preventDefault();
 
-        $('#exchange_name').val( encryptData($('#exchange_name').val())); // Use encryptData function
+        // $('#exchange_name').val( encryptData($('#exchange_name').val())); // Use encryptData function
         this.submit();
     });
 

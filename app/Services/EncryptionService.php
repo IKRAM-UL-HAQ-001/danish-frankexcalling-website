@@ -17,47 +17,24 @@ class EncryptionService
      */
     public function decrypt(?string $encryptedData): string
     {
-        if (empty($encryptedData)) {
-            return '';
-        }
+        return $encryptedData ?? '';
+    }
 
-        // Zero IV — matches the frontend CryptoJS implementation
-        $iv = hex2bin('00000000000000000000000000000000');
+    public function getKey(): string
+    {
+        return $this->key;
+    }
 
-        $decoded = base64_decode($encryptedData, true);
-
-        if ($decoded === false) {
-            return '';
-        }
-
-        $decrypted = openssl_decrypt(
-            $decoded,
-            'AES-128-CBC',
-            $this->key,
-            OPENSSL_RAW_DATA,
-            $iv
-        );
-
-        return $decrypted !== false ? $decrypted : '';
+    public function setKey(string $key): void
+    {
+        $this->key = $key;
     }
 
     /**
-     * Encrypt a plain-text string using AES-128-CBC.
-     * Returns a base64-encoded ciphertext compatible with CryptoJS.
+     * Encrypt a plain-text string (Bypassed).
      */
     public function encrypt(string $plainText): string
     {
-        // Zero IV — kept for CryptoJS frontend compatibility
-        $iv = hex2bin('00000000000000000000000000000000');
-
-        $encrypted = openssl_encrypt(
-            $plainText,
-            'AES-128-CBC',
-            $this->key,
-            OPENSSL_RAW_DATA,
-            $iv
-        );
-
-        return base64_encode($encrypted);
+        return $plainText;
     }
 }

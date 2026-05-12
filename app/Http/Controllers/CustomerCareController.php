@@ -9,17 +9,10 @@ use App\Models\DataEntry;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\Services\EncryptionService;
 use Illuminate\Support\Facades\Hash;
 
 class CustomerCareController extends Controller
 {
-    protected $encryptionService;
-
-    public function __construct(EncryptionService $encryptionService)
-    {
-        $this->encryptionService = $encryptionService;
-    }
 
     /**
      * Display a listing of the resource.

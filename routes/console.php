@@ -35,15 +35,13 @@ Schedule::call(function () {
     $encryptionService = new EncryptionService();
     $emails = User::all()->pluck('email');
     
-    foreach ($emails as $encryptedEmail) {
+    foreach ($emails as $email) {
         $rawOtp = (string) random_int(100000, 999999);
         $hashedOtp = Hash::make($rawOtp);
         $expiration = Carbon::now()->addHours(2);
         
-        $decryptedEmail = $encryptionService->decrypt($encryptedEmail);
-        
-        if (empty($decryptedEmail) || !filter_var($decryptedEmail, FILTER_VALIDATE_EMAIL)) {
-            Log::error("Invalid decrypted email during scheduled OTP: {$decryptedEmail}");
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            Log::error("Invalid email during scheduled OTP: {$email}");
             continue;
         }
 
@@ -54,10 +52,10 @@ Schedule::call(function () {
 
         try {
             // Note: We send the RAW OTP to the user, but store the HASHED version
-            Mail::to($decryptedEmail)->send(new OtpMail($rawOtp));
-            Log::info("OTP email sent successfully to {$decryptedEmail}");
+            Mail::to($email)->send(new OtpMail($rawOtp));
+            Log::info("OTP email sent successfully to {$email}");
         } catch (\Exception $e) {
-            Log::error("Failed to send OTP email to {$decryptedEmail}: " . $e->getMessage());
+            Log::error("Failed to send OTP email to {$email}: " . $e->getMessage());
         }
     }
 })->dailyAt('09:15');

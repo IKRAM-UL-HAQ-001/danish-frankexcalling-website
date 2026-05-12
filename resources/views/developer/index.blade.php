@@ -20,25 +20,11 @@
         const iv = CryptoJS.enc.Hex.parse('00000000000000000000000000000000'); // 16-byte fixed IV
 
         function encryptData(data) {
-            return CryptoJS.AES.encrypt(data, secretKey, {
-                iv: iv
-            }).toString();
+            return data;
         }
 
         function decryptData(encryptedData) {
-            if (!encryptedData || encryptedData.length === 0) {
-                return ''; // Return empty if no valid data is found
-            }
-
-            try {
-                const decrypted = CryptoJS.AES.decrypt(encryptedData, secretKey, {
-                    iv: iv
-                });
-                return decrypted.toString(CryptoJS.enc.Utf8);
-            } catch (e) {
-                console.error('Error during decryption:', e);
-                return ''; // Return empty if decryption fails
-            }
+            return encryptedData;
         }
 
         document.getElementById('decryptButton').addEventListener('click', async () => {

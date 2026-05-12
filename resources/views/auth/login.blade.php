@@ -196,33 +196,21 @@
         const iv = CryptoJS.enc.Hex.parse('00000000000000000000000000000000'); // 16-byte fixed IV
 
         function encryptData(data) {
-            return CryptoJS.AES.encrypt(data, secretKey, {
-                iv: iv
-            }).toString();
+            return data;
         }
 
         $('#form').on('submit', function() {
-            // Encrypt the form fields
-            $('#name').val(encryptData($('#name').val()));
-            $('#password').val(encryptData($('#password').val()));
-
+            // Encryption bypassed
             // Show the preloader before form submission
             $('#preloader').css('display', 'flex');
         });
 
         function decryptData(encryptedData) {
-            const decrypted = CryptoJS.AES.decrypt(encryptedData, secretKey, {
-                iv: iv
-            });
-            return decrypted.toString(CryptoJS.enc.Utf8);
+            return encryptedData;
         }
 
         $('.encrypted-data').each(function() {
-            const encryptedData = $(this).text().trim();
-            const decryptedData = decryptData(encryptedData);
-            if (decryptedData) {
-                $(this).text(decryptedData);
-            }
+            // Decryption loop removed
         });
     });
 
